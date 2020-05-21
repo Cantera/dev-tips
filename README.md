@@ -19,7 +19,7 @@ $ PYTHONPATH=build/python python
 
 This opens up `python` add adds the `build/python` directory to Python's search list. From the root of Cantera's source code, the `build/python` directory contains the Python module once you run `scons build`. Then, you can see the `__init__.py` file being modified, run `scons build` again, and the changes to `__init__.py` are reflected when you reload the module.
 
-![]()
+![PYTHONPATH tip](images/pythonpath-tip.gif)
 
 By using the same trick with `PYTHONPATH`, you can load IPython, or specify a script name that Python should run.
 
