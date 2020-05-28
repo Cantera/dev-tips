@@ -48,7 +48,7 @@ $ PYTHONPATH=build/python python -m unittest -v cantera.test.test_purefluid.Test
 
 Just put the test function name after the class name.
 
-## Compiling Cantera from Source - _Developer Quickstart_
+## Compiling Cantera from Source - _Linux/macOS Developer Quickstart_
 
 ### Installation Requirements
 
@@ -56,7 +56,7 @@ Just put the test function name after the class name.
 
   * _Tip:_ You can determine whether you have a C++ compiler set up on your computer by typing `g++ --version` in the terminal.
 
-* You'll also need a virtual environment manager to host your Cantera build environment and its required packages. This guide uses the conda package management system, which you should install using the [official Miniconda installer](https://docs.conda.io/en/latest/miniconda.html#miniconda) if you don't already have it.
+* You'll also need a virtual environment manager to host your Cantera build environment and its required packages. This guide uses the conda package management system, which you should install using the [official Miniconda installer](https://docs.conda.io/en/latest/miniconda.html#miniconda) if you don't already have Miniconda, Anaconda, or Python installed in another way.
 
   * _Tip:_ You can determine whether you have conda installed on your computer by typing `conda --version` in the terminal.
 
@@ -100,12 +100,12 @@ Just put the test function name after the class name.
 
   ```console
   cd cantera
-  scons build boost_inc_dir=${/absolute/path/to/env}/include
+  scons build boost_inc_dir=${CONDA_PREFIX}/include
   ```
 
-  Be sure to replace `{/absolute/path/to/env}` with the absolute path to your `cantera-dev` environment. A `boost_inc_dir` location needs to be specified here because Boost is needed by your system's C++ compiler, which won't be able to find the library on its own.
+  The part with `${CONDA_PREFIX}` is an **environment variable replacement**. When you build Cantera, SCons will replace `${CONDA_PREFIX}` with the value of an environment variable with the name `CONDA_PREFIX`. This environment variable is set by Conda to point at your currently activated environment.
 
-  * _Tip:_ You can determine the absolute paths of your virtual environments by typing `conda info --envs` in the terminal.
+  A `boost_inc_dir` location needs to be specified here because Boost is needed by your system's C++ compiler, which won't be able to find the library on its own since the Conda directories are not a standard location. Standard locations on macOS and Linux systems are `/usr/include` and `/usr/local/include`.
 
   * _Tip:_ You can compile in parallel by adding the `-j #` command line flag to `scons build`, which builds `#` objects in parallel. Don't set it higher than the number of CPUs that you have in your machine, or it might slow the build down rather than speeding it up!
 
@@ -143,7 +143,7 @@ Just put the test function name after the class name.
   * _Tip:_ If you're planning on installing Cantera in a particular location, you can instead specify the `prefix` option during building to avoid recompilations during install:
 
     ```console
-    scons build boost_inc_dir=${/absolute/path/to/env}/include prefix={/absolute/path/to/directory}
+    scons build boost_inc_dir=${CONDA_PREFIX}/include prefix={/absolute/path/to/directory}
     scons install
     ```
 
