@@ -47,64 +47,104 @@ $ PYTHONPATH=build/python python -m unittest -v cantera.test.test_purefluid.Test
 
 Just put the test function name after the class name.
 
-## Compiling Cantera from Source - _Quickstart_
+## Compiling Cantera from Source - _Developer Quickstart_
 
 ### Installation Requirements
 
 * You'll need a C++ compiler installed on your system. If you don't already have one, download one of our [recommended compilers](https://cantera.org/compiling/dependencies.html#compilers).
+
     * _Tip:_ You can determine whether you have a C++ compiler set up on your computer by typing `g++ --version` in the terminal.
 
-* You'll also need Anaconda, a virtual environment manager that will host your Cantera build environment and its required packages. Install Anaconda using the [official installer](https://www.anaconda.com/products/individual#Downloads) for your platform.
+* You'll also need a virtual environment manager to host your Cantera build environment and its required packages. This guide uses the conda package management system, which you should install using the [official Miniconda installer](https://docs.conda.io/en/latest/miniconda.html#miniconda) if you don't already have it.
+
+    * _Tip:_ You can determine whether you have conda installed on your computer by typing `conda --version` in the terminal.
+
     * _Stuck?_ See our more detailed [Conda Requirements](https://cantera.org/compiling/installation-reqs.html#conda-requirements).
 
-* Create a build environment for Cantera by running the following code in terminal:
-    ```
-    conda create --name cantera python=3 scons cython boost numpy ruamel_yaml
-    ```
-    * This command creates a virtual environment named `cantera`, with Cantera's default package dependencies preinstalled. These libraries were automatically downloaded to your computer with the installation of Anaconda. For more advanced builds of Cantera, you may need to install [additional packages](https://cantera.org/compiling/dependencies.html#optional-programs) to your environment. 
+* Next, you'll need to initialize a development environment for Cantera. As you may have noticed, as soon as it was installed conda created and activated a virtual environment called `base`. Project-specific packages are not typically installed into `base`, to avoid version conflicts with requirements across different projects. Instead, create a new environment called `cantera-dev` with Cantera's default package dependencies preinstalled by typing the following command in the terminal:
 
-* You can switch into your `cantera` virtual environment by typing the following command in terminal:
     ```
-    conda activate cantera
+    conda create --name cantera-dev python=3 scons cython boost numpy ruamel_yaml
     ```
-    * _Tip:_ You can leave this environment using the terminal command `conda deactivate` at any time. Switch back to your base environment when you're done working on Cantera!
+
+    * For more advanced builds of Cantera, you may need to install [additional packages](https://cantera.org/compiling/dependencies.html#optional-programs) to your environment. 
+
+* You can switch into the `cantera-dev` virtual environment by typing the following command in terminal:
+    
+    ```
+    conda activate cantera-dev
+    ```
+
+    * _Tip:_ You can deactivate this environment using the terminal command `conda deactivate` at any time. Switch back to your base environment when you're done working on Cantera!
 
 ### Download the Source Code
 
-* Copy the development version of the Cantera source code repository from GitHub to your computer by running this code in the terminal:
+* Create a personal copy of the official [Cantera repository on Github](https://github.com/Cantera/cantera) by pressing the "Fork" button at the top right of the page. You can make changes to or experiment with the code in your fork without affecting Cantera's version.
+
+* Copy your fork from GitHub to your computer by running this code in the terminal:
+
     ```
-    git clone --recursive https://github.com/Cantera/cantera.git
+    git clone --recursive https://github.com/{your_username}/cantera.git
     ```
-    * This command creates a local copy of the official [Cantera repository](https://github.com/Cantera/cantera) on your computer. You can make changes to this local copy of the code without affecting the remote version. The `--recursive` option is used here to automatically update and initialize Cantera's required [submodules](https://cantera.org/compiling/dependencies.html#other-required-software).
+
+    Be sure to replace `{your_username}` with the username of the GitHub account that you used to fork Cantera. The `--recursive` option is used here to automatically update and initialize Cantera's required [submodules](https://cantera.org/compiling/dependencies.html#other-required-software).
+
     * _Tip:_ The cloned repository will be stored in a new directory created within your current working directory. Improve organization by first creating a new "Cantera" directory below your home directory, and calling the command from there.
+
     * _Need a different version?_ See our more detailed [Downloading the Cantera Source Code](https://cantera.org/compiling/source-code.html#sec-source-code).
 
-### Build and Install
+### Compile and Test
 
-* The Cantera source code can be compiled automatically using the SCons build system that was preinstalled in your `cantera` virtual environment. In the terminal, switch into your newly cloned copy of the `cantera` repository and then issue the build command, as follows:
+* The Cantera source code can be compiled automatically using the SCons build system that was preinstalled in your `cantera-dev` virtual environment. In the terminal, switch into your newly cloned copy of the `cantera` repository and then issue the build command as follows:
+
     ```
     cd cantera
-    scons build
+    scons build boost_inc_dir=${/absolute/path/to/env}/include
     ```
-    * The build process may take a while. On successful compilation, you should see a message that looks like:
-        ```
-        *******************************************************
-        Compilation completed successfully.
 
-        - To run the test suite, type 'scons test'.
-        - To install, type '[sudo] scons install'.
-        *******************************************************
-        ```
+    Be sure to replace `{/absolute/path/to/env}` with the absolute path to your `cantera-dev` environment. A `boost_inc_dir` location needs to be specified here because Boost is needed by your system's C++ compiler, which won't be able to find the library on its own.
+
+    * _Tip:_ You can determine the absolute paths of your virtual environments by typing `conda info --envs` in the terminal.
+
+    * _Tip:_ You can compile in parallel by adding the `-j #` command line flag to `scons build`, which builds `#` objects in parallel. Don't set it higher than the number of CPUs that you have in your machine, or it might slow the build down rather than speeding it up!
+
     * For more advanced builds of Cantera, you may specify [additional build options](https://cantera.org/compiling/configure-build-dev.html#determine-configuration-options).
+
+* The build process may take a while. On successful compilation, you should see a message that looks like:
+
+    ```
+    *******************************************************
+    Compilation completed successfully.
+
+    - To run the test suite, type 'scons test'.
+    - To install, type '[sudo] scons install'.
+    *******************************************************
+    ```
+
+    As indicated, you may choose to run `scons test` to make sure that your code is working correctly.
+
     * _Stuck?_ See our more detailed [Compile Cantera & Test](https://cantera.org/compiling/configure-build-dev.html#compile-cantera-test).
 
+### _(Optional)_ Install
+
 * Install the compiled code into a directory of your choice by typing the following into the terminal:
+
     ```
-    scons install prefix=/path/to/desired/directory
+    scons install prefix={/absolute/path/to/directory}
     ```
+
+    Be sure to replace `{/absolute/path/to/directory}` with the absolute path to your desired install directory. By default, the install location will be your local `cantera` directory.
+
     * This command installs a selection of input files, resources, and executable samples into the specified directory. Take a look!
+
     * _Tip:_ If you created a new "Cantera" directory in your home directory, you can use it as your install location by specifying its absolute path as the prefix.
+
+    * _Tip:_ If you're planning on installing Cantera in a particular location, you can instead specify the `prefix` option during building to avoid recompilations during install:
+
+        ```
+        scons build boost_inc_dir=${/absolute/path/to/env}/include prefix={/absolute/path/to/directory}
+        scons install
+        ```
 
 ### _Need more information?_
 Please refer to the more detailed compilation instructions [here](https://cantera.org/install/compiling-install.html).
-
