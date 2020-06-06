@@ -147,6 +147,97 @@ Just put the test function name after the class name.
     scons install
     ```
 
+### Arch linux compiling from source issues.
+
+#### import math.h issue
+
+When compiling `Cantera` on Arch Linux,
+```
+$ lsb_release -a
+LSB Version:	1.4
+Distributor ID:	Arch
+Description:	Arch Linux
+Release:	rolling
+Codename:	n/a
+
+$ gcc --version
+gcc (GCC) 10.1.0
+Copyright (C) 2020 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE
+```
+
+
+I ran into the issue (found inside config.log)
+```
+scons: Configure: Checking for double x; log(x) in C library None...
+scons: Configure: ".sconf_temp/conftest_15.c" is up to date.
+scons: Configure: The original builder output was:
+  |.sconf_temp/conftest_15.c <-
+  |  |
+  |  |
+  |  |#include "math.h"
+  |  |
+  |  |int
+  |  |main() {
+  |  |  double x; log(x);
+  |  |return 0;
+  |  |}
+  |  |
+  |
+scons: Configure: ".sconf_temp/conftest_15.o" is up to date.
+scons: Configure: The original builder output was:
+  |gcc -o .sconf_temp/conftest_15.o -c -pthread -O3 -Wno-inline -g -DNDEBUG -I/home/anthony-walker/.conda/envs/cantera-dev/include .sconf_temp/conftest_15.c
+  |
+scons: Configure: Building ".sconf_temp/conftest_15" failed in a previous run and all its sources are up to date.
+scons: Configure: The original builder output was:
+  |gcc -o .sconf_temp/conftest_15 -pthread .sconf_temp/conftest_15.o
+  |
+scons: Configure: (cached) no
+```
+
+
+**Steps to reproduce the issue**:
+```
+$ git clone git@github.com:Cantera/cantera.git --recurse-submodules
+$ cd cantera
+$ conda create --name cantera-dev python=3 scons cython boost numpy ruamel_yaml --yes
+$ conda activate cantera-dev
+$ echo "boost_inc_dir = '$CONDA_PREFIX/include'" >> cantera.conf
+$ echo "python_package = 'full'" >> cantera.conf
+$ scons build -j 12
+.
+.
+.
+g++ -o build/python/cantera/_cantera.cpython-38-x86_64-linux-gnu.so -pthread -shared build/temp-py/_cantera.os -Lbuild/lib -lcantera
+collect2: error: ld returned 1 exit status
+scons: *** [build/lib/libcantera_shared.so.2.5.0] Error 1
+scons: building terminated because of errors.
+```
+
+**Steps to solve issue**
+
+My first attempt at a solution was to independently install sundials because it was seemingly causing the problem I tried this from both **conda** and the **AUR**. This allowed the code to compile successfully but it would fail during runtime with `undefined reference` errors to `CVODE` variables.
+
+The solution I found to this problem was to use a different version of `gcc`. I installed `gcc-7` from the **AUR** and added `CC` and `CXX` paths to the `cantera.conf`.
+```
+cantera.conf:
+CXX = '/usr/bin/g++-7'
+CC = '/usr/bin/gcc-7'
+prefix = '/home/anthony-walker/.conda/envs/cantera-dev'
+python_package = 'full'
+f90_interface = 'n'
+boost_inc_dir = '/home/anthony-walker/.conda/envs/cantera-dev/include'
+```
+
+```
+$ scons clean
+$ scons build -j 12
+$ scons install prefix=$CONDA_PREFIX
+$ source $CONDA_PREFIX/bin/setup_cantera
+```
+
+
 ### _Need more information?_
 
 Please refer to the more detailed compilation instructions [here](https://cantera.org/install/compiling-install.html).
