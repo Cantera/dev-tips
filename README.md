@@ -236,7 +236,67 @@ $ scons build -j 12
 $ scons install prefix=$CONDA_PREFIX
 $ source $CONDA_PREFIX/bin/setup_cantera
 ```
+### Debugging the source code
 
+When you modify Cantera's source code, it is highly likely that you break the code and need to debug it. Following are some ways to debug your code -
+
+*  Build the source code with `debug` options. Modify the `cantera.conf` file by adding the `debug` flags with no optimizations as follows
+```
+cantera.conf:
+debug_flags='-g -D_GLIBCXX_ASSERTIONS'
+optimize = 'no'
+```
+The flag `D_GLIBCXX_ASSERTIONS` is useful to see the stack trace. For more details about debug flags available in Cantera, see [debug_options](https://cantera.org/compiling/config-options.html#debug).
+
+*  The error statements inside the source code are pretty self-explanatory. These sentences mention the filename and function name causing the error and point to the exact source of error.
+
+    For example, trying to set the negative temperature will generate following error -
+
+    ```
+    $ python.exe test.py
+    Traceback (most recent call last):
+    File "test.py", line 37, in <module>
+    gas.TP = = -500, 101325
+    File "interfaces\cython\cantera\thermo.pyx", line 1145, in cantera._cantera.ThermoPhase.TP.__set__
+    cantera._cantera.CanteraError:
+    ***********************************************************************
+    CanteraError thrown by Phase::setTemperature:
+    temperature must be positive. T = -500.0
+    ***********************************************************************
+    ```
+
+    In this case the error is thrown by the function `setTemperature` in `Phase` class (i.e. from the file `phase.cpp`).
+
+*  To debug the code, which I have modified -  I typically put print statements inside the source code to check the values of certain variables.
+
+  E.g. Inside the source code, if I want to see the value of variable `varExample` in the function `funcExample`, then I put the command inside the function as
+  ```
+  writelog("In funcExample:: value of varExample is {} \n", varExample);
+  ```
+  Here single curly brackets { } act as a placeholder for the variable to be printed. Everything else that is written inside double quotes will get printed as it is on the screen. For example, if `varExample = 10`, then above command will print
+  ```
+  In funcExample:: value of varExample is 10
+
+  ```
+  _Tip_: One needs to build the source code again before running the main example file. This method is inefficient, but sometimes useful for a quick check.  
+
+*  For the segmentation fault errors, using GDB (or similar tools such as LLDB) on Linux is useful. It can be run as follows:
+   ```
+   gdb --args /path/to/python/executable
+   ```
+   It opens the `gdb` prompt. Then run the example python file in terminal as
+   ```
+   run example.py
+   ```
+   The run stops whenever segmentation fault or other error is encountered. Then type ```where```. It shows the entire trace of the current run.
+
+   One can also set the breakpoint as
+   ```
+   breakpoint set --name setState_TP
+   ```
+   In this case, the run will stop when the function `ThermoPhase::setState_TP` is encountered.
+
+   _Tip_: The above method works only on Linux.
 
 ### _Need more information?_
 
