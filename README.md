@@ -236,6 +236,46 @@ $ scons build -j 12
 $ scons install prefix=$CONDA_PREFIX
 $ source $CONDA_PREFIX/bin/setup_cantera
 ```
+### Debugging the source code
+
+When you modify Cantera's source code, it is highly likely that you break the code and need to debug it. Following are some ways to debug your code -
+
+*  Build the source code with `debug` options. Modify the `cantera.conf` file by adding the `debug` flags with no optimizations as follows
+```
+cantera.conf:
+debug_flags='-g -D_GLIBCXX_ASSERTIONS'
+optimize = 'no'
+```
+The flag `D_GLIBCXX_ASSERTIONS` is useful to see the stack trace. For more details about debug flags available in Cantera, see [debug_options](https://cantera.org/compiling/config-options.html#debug).
+
+
+
+
+*  The error statements inside the source code are pretty self-explanatory. These sentences mention the filename and function name causing the error and point to the exact source of error.
+
+*  To debug the code, which I have modified -  I typically put print statements inside the source code to check the values of certain variables.
+
+  E.g. Inside the source code, if I want to see the value of variable `varExample` in the function `funcExample`, then I put the command inside the function as
+   ```
+   writelog("In funcExample:: value of varExample is {} \n", varExample);
+   ```
+   _Tip_: One needs to build the source code again before running the main example file. This method is inefficient, but sometimes useful for a quick check.  
+
+*  For the segmentation fault errors, using GDB (or similar tools such as LLDB) is useful. It can be run on Linux as follows:
+   ```
+   gdb --args $PYTHON_PATH$
+   ```
+   It opens the `gdb` prompt. Then run the example python file in terminal as
+   ```
+   run example.py
+   ```
+   The run stops whenever segmentation fault or other error is encountered. Then type ```where```. It shows the entire trace of the current run.
+
+   One can also set the breakpoint as
+   ```
+   breakpoint set --name setState_TP
+   ```
+   In this case, the run will stop when the function `ThermoPhase::setState_TP` is encountered.
 
 
 ### _Need more information?_
