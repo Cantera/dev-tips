@@ -125,6 +125,22 @@ Just put the test function name after the class name.
   As indicated, you may choose to run `scons test` to make sure that your code is working correctly.
 
   * _Stuck?_ See our more detailed [Compile Cantera & Test](https://cantera.org/compiling/configure-build-dev.html#compile-cantera-test).
+  
+###  Editing and Compiling
+
+* After successfully compiling Cantera, now you can begin to make your desired changes. But now you need to be able to compile Cantera using terminal.
+
+* Open terminal and change directory to the cantera directory using `cd` command in terminal.
+
+* Switch into the cantera-dev virtual environment by typing the following command in terminal:
+
+`conda activate cantera-dev`
+
+*Build (compile) Cantera using the following command in terminal:
+
+`scons build`
+
+*_Tip:_ There are many other `scons` functions you can use besides `build`. See here in our [Configure & Build Cantera] (https://cantera.org/compiling/configure-build.html#sec-build-commands) page!
 
 ### _(Optional)_ Install
 
