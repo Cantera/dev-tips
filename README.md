@@ -128,7 +128,7 @@ As indicated, you may choose to run `scons test` to make sure that your code is 
 
 ###  Editing and Compiling
 
-* After successfully compiling Cantera, now you can begin to make your desired changes. But now you need to be able to compile Cantera using terminal the next time you open it.
+* The next time you open Cantera and make your desired changes you will need to be able to compile Cantera using terminal.
 
 * Open terminal and change directory to the cantera directory using `cd` command in terminal.
 
