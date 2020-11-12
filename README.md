@@ -144,6 +144,17 @@ conda activate cantera-dev
 scons build
 ```
 
+* On successful compilation, you should see a message that looks like:
+
+```console
+*******************************************************
+Compilation completed successfully.
+
+- To run the test suite, type 'scons test'.
+- To install, type '[sudo] scons install'.
+*******************************************************
+```
+
 *_Tip:_ There are many other `scons` functions you can use besides `build`. See here in our [Configure & Build Cantera](https://cantera.org/compiling/configure-build.html#sec-build-commands) page!
 
 ### _(Optional)_ Install
