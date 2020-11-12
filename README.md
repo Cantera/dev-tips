@@ -54,29 +54,29 @@ Just put the test function name after the class name.
 
 * You'll need a C++ compiler installed on your system. If you don't already have one, download one of our [recommended compilers](https://cantera.org/compiling/dependencies.html#compilers).
 
-  * _Tip:_ You can determine whether you have a C++ compiler set up on your computer by typing `g++ --version` in the terminal.
+* _Tip:_ You can determine whether you have a C++ compiler set up on your computer by typing `g++ --version` in the terminal.
 
 * You'll also need a virtual environment manager to host your Cantera build environment and its required packages. This guide uses the conda package management system, which you should install using the [official Miniconda installer](https://docs.conda.io/en/latest/miniconda.html#miniconda) if you don't already have Miniconda, Anaconda, or Python installed in another way.
 
-  * _Tip:_ You can determine whether you have conda installed on your computer by typing `conda --version` in the terminal.
+* _Tip:_ You can determine whether you have conda installed on your computer by typing `conda --version` in the terminal.
 
-  * _Stuck?_ See our more detailed [Conda Requirements](https://cantera.org/compiling/installation-reqs.html#conda-requirements).
+* _Stuck?_ See our more detailed [Conda Requirements](https://cantera.org/compiling/installation-reqs.html#conda-requirements).
 
 * Next, you'll need to initialize a development environment for Cantera. As you may have noticed, as soon as it was installed conda created and activated a virtual environment called `base`. Project-specific packages are not typically installed into `base`, to avoid version conflicts with requirements across different projects. Instead, create a new environment called `cantera-dev` with Cantera's default package dependencies preinstalled by typing the following command in the terminal:
 
-  ```console
-  conda create --name cantera-dev python=3 scons cython boost numpy ruamel_yaml
-  ```
+```console
+conda create --name cantera-dev python=3 scons cython boost numpy ruamel_yaml
+```
 
-  * For more advanced builds of Cantera, you may need to install [additional packages](https://cantera.org/compiling/dependencies.html#optional-programs) to your environment.
+* For more advanced builds of Cantera, you may need to install [additional packages](https://cantera.org/compiling/dependencies.html#optional-programs) to your environment.
 
 * You can switch into the `cantera-dev` virtual environment by typing the following command in terminal:
 
-  ```console
-  conda activate cantera-dev
-  ```
+```console
+conda activate cantera-dev
+```
 
-  * _Tip:_ You can deactivate this environment using the terminal command `conda deactivate` at any time. Switch back to your base environment when you're done working on Cantera!
+* _Tip:_ You can deactivate this environment using the terminal command `conda deactivate` at any time. Switch back to your base environment when you're done working on Cantera!
 
 ### Download the Source Code
 
@@ -84,48 +84,48 @@ Just put the test function name after the class name.
 
 * Copy your fork from GitHub to your computer by running this code in the terminal:
 
-  ```console
-  git clone --recursive https://github.com/{your_username}/cantera.git
-  ```
+```console
+git clone --recursive https://github.com/{your_username}/cantera.git
+```
 
-  Be sure to replace `{your_username}` with the username of the GitHub account that you used to fork Cantera. The `--recursive` option is used here to automatically update and initialize Cantera's required [submodules](https://cantera.org/compiling/dependencies.html#other-required-software).
+Be sure to replace `{your_username}` with the username of the GitHub account that you used to fork Cantera. The `--recursive` option is used here to automatically update and initialize Cantera's required [submodules](https://cantera.org/compiling/dependencies.html#other-required-software).
 
-  * _Tip:_ The cloned repository will be stored in a new directory created within your current working directory. Improve organization by first creating a new "Cantera" directory below your home directory, and calling the command from there.
+* _Tip:_ The cloned repository will be stored in a new directory created within your current working directory. Improve organization by first creating a new "Cantera" directory below your home directory, and calling the command from there.
 
-  * _Need a different version?_ See our more detailed [Downloading the Cantera Source Code](https://cantera.org/compiling/source-code.html#sec-source-code).
+* _Need a different version?_ See our more detailed [Downloading the Cantera Source Code](https://cantera.org/compiling/source-code.html#sec-source-code).
 
 ### Compile and Test
 
 * The Cantera source code can be compiled automatically using the SCons build system that was preinstalled in your `cantera-dev` virtual environment. In the terminal, switch into your newly cloned copy of the `cantera` repository and then issue the build command as follows:
 
-  ```console
-  cd cantera
-  scons build boost_inc_dir=${CONDA_PREFIX}/include
-  ```
+```console
+cd cantera
+scons build boost_inc_dir=${CONDA_PREFIX}/include
+```
 
-  The part with `${CONDA_PREFIX}` is an **environment variable replacement**. When you build Cantera, SCons will replace `${CONDA_PREFIX}` with the value of an environment variable with the name `CONDA_PREFIX`. This environment variable is set by Conda to point at your currently activated environment.
+The part with `${CONDA_PREFIX}` is an **environment variable replacement**. When you build Cantera, SCons will replace `${CONDA_PREFIX}` with the value of an environment variable with the name `CONDA_PREFIX`. This environment variable is set by Conda to point at your currently activated environment.
 
-  A `boost_inc_dir` location needs to be specified here because Boost is needed by your system's C++ compiler, which won't be able to find the library on its own since the Conda directories are not a standard location. Standard locations on macOS and Linux systems are `/usr/include` and `/usr/local/include`.
+A `boost_inc_dir` location needs to be specified here because Boost is needed by your system's C++ compiler, which won't be able to find the library on its own since the Conda directories are not a standard location. Standard locations on macOS and Linux systems are `/usr/include` and `/usr/local/include`.
 
-  * _Tip:_ You can compile in parallel by adding the `-j #` command line flag to `scons build`, which builds `#` objects in parallel. Don't set it higher than the number of CPUs that you have in your machine, or it might slow the build down rather than speeding it up!
+* _Tip:_ You can compile in parallel by adding the `-j #` command line flag to `scons build`, which builds `#` objects in parallel. Don't set it higher than the number of CPUs that you have in your machine, or it might slow the build down rather than speeding it up!
 
-  * For more advanced builds of Cantera, you may specify [additional build options](https://cantera.org/compiling/configure-build-dev.html#determine-configuration-options).
+* For more advanced builds of Cantera, you may specify [additional build options](https://cantera.org/compiling/configure-build-dev.html#determine-configuration-options).
 
 * The build process may take a while. On successful compilation, you should see a message that looks like:
 
-  ```console
-  *******************************************************
-  Compilation completed successfully.
+```console
+*******************************************************
+Compilation completed successfully.
 
-  - To run the test suite, type 'scons test'.
-  - To install, type '[sudo] scons install'.
-  *******************************************************
-  ```
+- To run the test suite, type 'scons test'.
+- To install, type '[sudo] scons install'.
+*******************************************************
+```
 
-  As indicated, you may choose to run `scons test` to make sure that your code is working correctly.
+As indicated, you may choose to run `scons test` to make sure that your code is working correctly.
 
-  * _Stuck?_ See our more detailed [Compile Cantera & Test](https://cantera.org/compiling/configure-build-dev.html#compile-cantera-test).
-  
+* _Stuck?_ See our more detailed [Compile Cantera & Test](https://cantera.org/compiling/configure-build-dev.html#compile-cantera-test).
+
 ###  Editing and Compiling
 
 * After successfully compiling Cantera, now you can begin to make your desired changes. But now you need to be able to compile Cantera using terminal.
@@ -134,34 +134,38 @@ Just put the test function name after the class name.
 
 * Switch into the cantera-dev virtual environment by typing the following command in terminal:
 
-`conda activate cantera-dev`
+```console 
+conda activate cantera-dev
+```
 
 *Build (compile) Cantera using the following command in terminal:
 
-`scons build`
+```console 
+scons build
+```
 
-*_Tip:_ There are many other `scons` functions you can use besides `build`. See here in our [Configure & Build Cantera] (https://cantera.org/compiling/configure-build.html#sec-build-commands) page!
+*_Tip:_ There are many other `scons` functions you can use besides `build`. See here in our [Configure & Build Cantera](https://cantera.org/compiling/configure-build.html#sec-build-commands) page!
 
 ### _(Optional)_ Install
 
 * Install the compiled code into a directory of your choice by typing the following into the terminal:
 
-  ```console
-  scons install prefix={/absolute/path/to/directory}
-  ```
+```console
+scons install prefix={/absolute/path/to/directory}
+```
 
-  Be sure to replace `{/absolute/path/to/directory}` with the absolute path to your desired install directory. By default, the install location will be your local `cantera` directory.
+Be sure to replace `{/absolute/path/to/directory}` with the absolute path to your desired install directory. By default, the install location will be your local `cantera` directory.
 
-  * This command installs a selection of input files, resources, and executable samples into the specified directory. Take a look!
+* This command installs a selection of input files, resources, and executable samples into the specified directory. Take a look!
 
-  * _Tip:_ If you created a new "Cantera" directory in your home directory, you can use it as your install location by specifying its absolute path as the prefix.
+* _Tip:_ If you created a new "Cantera" directory in your home directory, you can use it as your install location by specifying its absolute path as the prefix.
 
-  * _Tip:_ If you're planning on installing Cantera in a particular location, you can instead specify the `prefix` option during building to avoid recompilations during install:
+* _Tip:_ If you're planning on installing Cantera in a particular location, you can instead specify the `prefix` option during building to avoid recompilations during install:
 
-    ```console
-    scons build boost_inc_dir=${CONDA_PREFIX}/include prefix={/absolute/path/to/directory}
-    scons install
-    ```
+```console
+scons build boost_inc_dir=${CONDA_PREFIX}/include prefix={/absolute/path/to/directory}
+scons install
+```
 
 ### Arch linux compiling from source issues.
 
@@ -170,11 +174,11 @@ Just put the test function name after the class name.
 When compiling `Cantera` on Arch Linux,
 ```
 $ lsb_release -a
-LSB Version:	1.4
-Distributor ID:	Arch
-Description:	Arch Linux
-Release:	rolling
-Codename:	n/a
+LSB Version:    1.4
+Distributor ID:    Arch
+Description:    Arch Linux
+Release:    rolling
+Codename:    n/a
 
 $ gcc --version
 gcc (GCC) 10.1.0
@@ -189,26 +193,26 @@ I ran into the issue (found inside config.log)
 scons: Configure: Checking for double x; log(x) in C library None...
 scons: Configure: ".sconf_temp/conftest_15.c" is up to date.
 scons: Configure: The original builder output was:
-  |.sconf_temp/conftest_15.c <-
-  |  |
-  |  |
-  |  |#include "math.h"
-  |  |
-  |  |int
-  |  |main() {
-  |  |  double x; log(x);
-  |  |return 0;
-  |  |}
-  |  |
-  |
+|.sconf_temp/conftest_15.c <-
+|  |
+|  |
+|  |#include "math.h"
+|  |
+|  |int
+|  |main() {
+|  |  double x; log(x);
+|  |return 0;
+|  |}
+|  |
+|
 scons: Configure: ".sconf_temp/conftest_15.o" is up to date.
 scons: Configure: The original builder output was:
-  |gcc -o .sconf_temp/conftest_15.o -c -pthread -O3 -Wno-inline -g -DNDEBUG -I/home/anthony-walker/.conda/envs/cantera-dev/include .sconf_temp/conftest_15.c
-  |
+|gcc -o .sconf_temp/conftest_15.o -c -pthread -O3 -Wno-inline -g -DNDEBUG -I/home/anthony-walker/.conda/envs/cantera-dev/include .sconf_temp/conftest_15.c
+|
 scons: Configure: Building ".sconf_temp/conftest_15" failed in a previous run and all its sources are up to date.
 scons: Configure: The original builder output was:
-  |gcc -o .sconf_temp/conftest_15 -pthread .sconf_temp/conftest_15.o
-  |
+|gcc -o .sconf_temp/conftest_15 -pthread .sconf_temp/conftest_15.o
+|
 scons: Configure: (cached) no
 ```
 
@@ -266,53 +270,53 @@ The flag `D_GLIBCXX_ASSERTIONS` is useful to see the stack trace. For more detai
 
 *  The error statements inside the source code are pretty self-explanatory. These sentences mention the filename and function name causing the error and point to the exact source of error.
 
-    For example, trying to set the negative temperature will generate following error -
+For example, trying to set the negative temperature will generate following error -
 
-    ```
-    $ python.exe test.py
-    Traceback (most recent call last):
-    File "test.py", line 37, in <module>
-    gas.TP = = -500, 101325
-    File "interfaces\cython\cantera\thermo.pyx", line 1145, in cantera._cantera.ThermoPhase.TP.__set__
-    cantera._cantera.CanteraError:
-    ***********************************************************************
-    CanteraError thrown by Phase::setTemperature:
-    temperature must be positive. T = -500.0
-    ***********************************************************************
-    ```
+```
+$ python.exe test.py
+Traceback (most recent call last):
+File "test.py", line 37, in <module>
+gas.TP = = -500, 101325
+File "interfaces\cython\cantera\thermo.pyx", line 1145, in cantera._cantera.ThermoPhase.TP.__set__
+cantera._cantera.CanteraError:
+***********************************************************************
+CanteraError thrown by Phase::setTemperature:
+temperature must be positive. T = -500.0
+***********************************************************************
+```
 
-    In this case the error is thrown by the function `setTemperature` in `Phase` class (i.e. from the file `phase.cpp`).
+In this case the error is thrown by the function `setTemperature` in `Phase` class (i.e. from the file `phase.cpp`).
 
 *  To debug the code, which I have modified -  I typically put print statements inside the source code to check the values of certain variables.
 
-  E.g. Inside the source code, if I want to see the value of variable `varExample` in the function `funcExample`, then I put the command inside the function as
-  ```
-  writelog("In funcExample:: value of varExample is {} \n", varExample);
-  ```
-  Here single curly brackets { } act as a placeholder for the variable to be printed. Everything else that is written inside double quotes will get printed as it is on the screen. For example, if `varExample = 10`, then above command will print
-  ```
-  In funcExample:: value of varExample is 10
+E.g. Inside the source code, if I want to see the value of variable `varExample` in the function `funcExample`, then I put the command inside the function as
+```
+writelog("In funcExample:: value of varExample is {} \n", varExample);
+```
+Here single curly brackets { } act as a placeholder for the variable to be printed. Everything else that is written inside double quotes will get printed as it is on the screen. For example, if `varExample = 10`, then above command will print
+```
+In funcExample:: value of varExample is 10
 
-  ```
-  _Tip_: One needs to build the source code again before running the main example file. This method is inefficient, but sometimes useful for a quick check.  
+```
+_Tip_: One needs to build the source code again before running the main example file. This method is inefficient, but sometimes useful for a quick check.  
 
 *  For the segmentation fault errors, using GDB (or similar tools such as LLDB) on Linux is useful. It can be run as follows:
-   ```
-   gdb --args /path/to/python/executable
-   ```
-   It opens the `gdb` prompt. Then run the example python file in terminal as
-   ```
-   run example.py
-   ```
-   The run stops whenever segmentation fault or other error is encountered. Then type ```where```. It shows the entire trace of the current run.
+```
+gdb --args /path/to/python/executable
+```
+It opens the `gdb` prompt. Then run the example python file in terminal as
+```
+run example.py
+```
+The run stops whenever segmentation fault or other error is encountered. Then type ```where```. It shows the entire trace of the current run.
 
-   One can also set the breakpoint as
-   ```
-   breakpoint set --name setState_TP
-   ```
-   In this case, the run will stop when the function `ThermoPhase::setState_TP` is encountered.
+One can also set the breakpoint as
+```
+breakpoint set --name setState_TP
+```
+In this case, the run will stop when the function `ThermoPhase::setState_TP` is encountered.
 
-   _Tip_: The above method works only on Linux.
+_Tip_: The above method works only on Linux.
 
 ### _Need more information?_
 
