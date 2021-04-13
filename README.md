@@ -297,7 +297,33 @@ The flag `D_GLIBCXX_ASSERTIONS` is useful to see the stack trace. For more detai
    In this case, the run will stop when the function `ThermoPhase::setState_TP` is encountered.
 
    _Tip_: The above method works only on Linux.
+## Build documentation 
+  
+The doc files are under `cantera/doc` directory. After editing the doc files, run
+```
+pip install -U sphinxcontrib-matlabdomain sphinxcontrib.doxylink sphinxcontrib.katex
+```
+to install the necessary dependencies. To build the documentation, run
+```
+scons build doxygen_docs=Y sphinx_docs=Y
+```
+The generated `.html` files are saved in `cantera/build/docs`. 
+## Migrate Cantera from one conda environment to another
 
+Suppose you already have Cantera built in one conda environment, and you want to build it in another conda environment. First activate the new conda environment.
+Next, change `Prefix` and `boost_inc_dir` parameters in `cantera/cantera.conf` file to point to the new conda environment.
+Make sure SCONS is installed in the new environment. To install SCONS, run
+```
+conda install -c conda-forge scons
+```
+Clean the previous build by
+```
+scons clean
+```
+, then build Cantera again with
+```
+scons build
+```
 ### _Need more information?_
 
 Please refer to the more detailed compilation instructions [here](https://cantera.org/install/compiling-install.html).
