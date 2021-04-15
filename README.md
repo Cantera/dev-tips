@@ -314,7 +314,7 @@ Suppose you already have Cantera built in one conda environment, and you want to
 Next, change `Prefix` and `boost_inc_dir` parameters in `cantera/cantera.conf` file to point to the new conda environment.
 Make sure SCONS is installed in the new environment. To install SCONS, run
 ```
-conda install -c conda-forge scons
+conda install scons
 ```
 Clean the previous build by
 ```
