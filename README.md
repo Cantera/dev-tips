@@ -282,7 +282,7 @@ The flag `D_GLIBCXX_ASSERTIONS` is useful to see the stack trace. For more detai
 
 *  For the segmentation fault errors, using GDB (or similar tools such as LLDB) on Linux is useful. It can be run as follows:
    ```
-   gdb --args /path/to/python/executable
+   /path/to/python/executable gdb --args python
    ```
    It opens the `gdb` prompt. Then run the example python file in terminal as
    ```
