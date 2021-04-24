@@ -284,7 +284,12 @@ The flag `D_GLIBCXX_ASSERTIONS` is useful to see the stack trace. For more detai
    ```
    gdb --args /path/to/python/executable
    ```
-   It opens the `gdb` prompt. Then run the example python file in terminal as
+   It opens the `gdb` prompt. To use GDB with Cantera built from source, the commands are:
+   ```
+   cd cantera
+   PYTHONPATH=build/python gdb --args /path/to/python/executable
+   ```
+   Then run the example python file in terminal as
    ```
    run example.py
    ```
