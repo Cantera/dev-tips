@@ -297,6 +297,19 @@ The flag `D_GLIBCXX_ASSERTIONS` is useful to see the stack trace. For more detai
    In this case, the run will stop when the function `ThermoPhase::setState_TP` is encountered.
 
    _Tip_: The above method works only on Linux.
+   
+   `gdb` can also be used to debug errors in tests in the Python or `gtest` test suites. For the Python test suite, you can run a specific test in `gdb` with a command like:
+   ```
+   PYTHONPATH=build/python gdb --args python -m unittest cantera.test.test_kinetics.TestDuplicateReactions.test_forward_multiple
+   ```
+   
+   Running one of the `gtest` tests is slightly more involved. To run a few tests out of the `thermo` test suite, the following commands can be used:
+   ```
+   scons test-thermo
+   cd test/work
+   LD_LIBRARY_PATH=../../build/lib CANTERA_DATA=../../build/data:../data PYTHONPATH=../../build/python gdb --args ../../build/test/thermo/thermo --gtest_filter=WaterProps*
+   ```
+   
 ## Build documentation 
   
 The doc files are under `cantera/doc` directory. After editing the doc files, run
