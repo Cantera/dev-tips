@@ -315,6 +315,18 @@ The flag `D_GLIBCXX_ASSERTIONS` is useful to see the stack trace. For more detai
    LD_LIBRARY_PATH=../../build/lib CANTERA_DATA=../../build/data:../data PYTHONPATH=../../build/python gdb --args ../../build/test/thermo/thermo --gtest_filter=WaterProps*
    ```
    
+   By default, `gdb` does not provide a very readable view of C++ standard library objects such as `std::vector<double>`. To use improved "pretty printers",
+   put the following in the `.gdbinit` file in your home directory:
+   ```
+   python
+   import sys
+   sys.path.insert(0, '/usr/share/gcc-10/python')
+   from libstdcxx.v6.printers import register_libstdcxx_printers
+   register_libstdcxx_printers (None)
+   end
+   ```
+   You may need to change the number suffix to the directory that is present on your system. The `gcc-10` directory should be present on Ubuntu 20.04.
+
 ## Build documentation 
   
 The doc files are under `cantera/doc` directory. After editing the doc files, run
