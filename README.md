@@ -65,7 +65,7 @@ Just put the test function name after the class name.
 * Next, you'll need to initialize a development environment for Cantera. As you may have noticed, as soon as it was installed conda created and activated a virtual environment called `base`. Project-specific packages are not typically installed into `base`, to avoid version conflicts with requirements across different projects. Instead, create a new environment called `cantera-dev` with Cantera's default package dependencies preinstalled by typing the following command in the terminal:
 
   ```console
-  conda create --name cantera-dev python=3 scons cython boost numpy ruamel_yaml
+  conda create --name cantera-dev python=3 scons cython boost numpy ruamel_yaml git
   ```
 
   * For more advanced builds of Cantera, you may need to install [additional packages](https://cantera.org/compiling/dependencies.html#optional-programs) to your environment.
